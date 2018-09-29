@@ -12,7 +12,7 @@ import os
 import re
 import readline
 
-COMMANDS = ['use', 'run', 'list', 'help']
+COMMANDS = ['use', 'run', 'list', 'help', 'quit']
 RE_SPACE = re.compile('.*\s+$', re.M)
 
 # https://stackoverflow.com/questions/5637124/tab-completion-in-pythons-raw-input
