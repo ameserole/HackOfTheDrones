@@ -1,8 +1,10 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python3.7
 
 from socket import*
 import sys, time
 from datetime import datetime
+
+global officialport
 
 host = ''
 max_port=5000
@@ -42,7 +44,10 @@ for port in range(min_port,max_port):
 	try:
 		response = scan_host(host,port)
 		
-		if response ==0:
+		if response == 0:
+			
+			officialport = port #This will be carried over to the SSH login
+			
 			print("[*] Port %d: is Wide Open! ATTACK!!!" % (port))
 		
 	except Exception:
