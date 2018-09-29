@@ -7,6 +7,12 @@ class DroneInterface:
         module = importlib.import_module(mod_name)
         self.drone_module = module.DroneModule()
 
+    def get_options(self):
+        self.drone_module.get_options()
+
+    def set_option(self, option, value):
+        self.drone_module.set_option(option, value)
+
     def Analyze(self):
         self.drone_module.Analyze()
 
