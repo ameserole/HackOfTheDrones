@@ -1,5 +1,6 @@
 import importlib
 import os
+import sys
 
 class DroneInterface:
     def __init__(self, module_name):
