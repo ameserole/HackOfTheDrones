@@ -3,7 +3,7 @@ import re
 import sys
 import argparse
 
-expression = '(((passw(or)?d)|(passphrase)|(pass)|(key)) *[:=] *.*)|(^[#]?\w+:[^\n]*)'
+
 outfile = None
 
 '''
@@ -11,7 +11,7 @@ outfile = None
 ' Check for common password and hash formats.
 ' Returns a list of password and/or hash formats found in the file.
 '''
-def scanFile(directory):
+def scanFile(directory, expression, outfile):
     #If the file exists, scan it
     if os.path.exists(directory):
         #like my regex expression? It's okay...
@@ -54,7 +54,7 @@ def scanFile(directory):
 '   Searches through the firmware file structure to find default credentials.
 '   Automatically pulls /etc/shadow and /etc/webpass.txt files if they exist
 '''
-def findcreds(directory, searchAll):
+def findcreds(directory, searchAll, expression, outfile):
     expstr = "using expression: " + repr(expression)
     if outfile is not None:
         f=open(outfile,'a')
@@ -64,9 +64,9 @@ def findcreds(directory, searchAll):
         print(expstr)
 
     #Pull files we know of that have jucy information
-    scanFile(directory + "/etc/shadow")
-    scanFile(directory + "/etc/webpass.txt")
-    scanFile(directory + "/etc/init.d/S90")
+    scanFile(directory + "/etc/shadow", expression, outfile)
+    scanFile(directory + "/etc/webpass.txt", expression, outfile)
+    scanFile(directory + "/etc/init.d/S90", expression, outfile)
     
     #   Scan through entire file structure to find potential credentials
     if searchAll == True:
@@ -74,20 +74,7 @@ def findcreds(directory, searchAll):
             path = root.split(os.sep)
             for file in files:
                 #Go through file line by line and check for potential matches to cred formats
-                scanFile(os.path.abspath(root) + '/' + file)
-'''
-' Sets the Regex expression to be used during scanFile() and findcreds() search
-'''
-def setRegex(exp):
-    global expression
-    expression=exp
-
-'''
-' Sets the outfile to be used, CLI output otherwise
-'''
-def setOutfile(of):
-    global outfile
-    outfile=of
+                scanFile(os.path.abspath(root) + '/' + file, expression, outfile)
 
 '''
 ' If this module is running on its own, parse the command line arguments for it
@@ -100,8 +87,6 @@ if __name__ == "__main__":
     parser.add_argument('-e', '--regex', type=str, help="input a custom regex expression, use this instead of the default")
     
     args = parser.parse_args()
-    if args.regex is not None:
-        setRegex(args.regex)
-    if args.outfile is not None:
-        setOutfile(args.outfile)
-    findcreds(args.firmware_directory, args.scanAll)
+    if args.regex is None:
+        args.regex = '(((passw(or)?d)|(passphrase)|(pass)|(key)) *[:=] *.*)|(^[#]?\w+:[^\n]*)' 
+    findcreds(args.firmware_directory, args.scanAll, args.regex, args.outfile)
