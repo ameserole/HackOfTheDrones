@@ -3,36 +3,6 @@ from consolemenu.items import *
 import sys
 from termcolor import colored
 
-def mod_1(stringring):
-    print("module 1")
-    print("Press any key to continue...")
-    sys.stdin.read(1)
-
-def mod_2(stringring):
-    print("module 2")
-    print("Press any key to continue...")
-    sys.stdin.read(1)
-
-def mod_3(stringring):
-    print("module 3")
-    print("Press any key to continue...")
-    sys.stdin.read(1)
-
-def mod_4(stringring):
-    print("module 4")
-    print("Press any key to continue...")
-    sys.stdin.read(1)
-
-def mod_5(stringring):
-    print("module 5")
-    print("Press any key to continue...")
-    sys.stdin.read(1)
-
-def mod_6(stringring):
-    print("module 6")
-    print("Press any key to continue...")
-    sys.stdin.read(1)
-
 def list_drone_wifi():
     print("Press any key to continue...")
     sys.stdin.read(1)
