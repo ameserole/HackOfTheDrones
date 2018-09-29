@@ -15,6 +15,9 @@ def list_modules():
 def print_list_usage():
     return
 
+def print_run_usage():
+    return
+
 # List Modules
 # List Drone Available Wifi
 # use <module>
@@ -49,10 +52,7 @@ def start_menu():
                 drone_inf.Exploit()
                 pass
             else:
-                print_list_usage()
-            
-            DroneInterface.Analyze()
-            DroneInterface.
+                print_run_usage()
         elif arguments[0] == "quit":
             break
         else:
