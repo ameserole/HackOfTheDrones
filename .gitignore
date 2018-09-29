@@ -105,3 +105,8 @@ venv.bak/
 
 #find_credentials module
 App/modules/firmware/
+*.swp
+App/modules/find_credentials/found.txt
+App/modules/find_credentials/outfile.txt
+App/modules/find_credentials/shadow
+App/modules/find_credentials/10-million-password-list-top-1000000.txt
