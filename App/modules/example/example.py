@@ -4,7 +4,8 @@ class DroneModule(DroneModuleFrame):
 
     def __init__(self):
         name = "Example"
-        DroneModuleFrame.__init__(self, name)
+        options = {'example': {'value': 'testvalue', 'description': 'I am a description'}}
+        DroneModuleFrame.__init__(self, name, options)
 
     def Analyze(self):
         print("I am analyzing stuff")
