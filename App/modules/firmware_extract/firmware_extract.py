@@ -1,4 +1,5 @@
 from ..DroneModuleFrame import DroneModuleFrame
+from . import firmwareextract
 
 class DroneModule(DroneModuleFrame):
 
@@ -12,7 +13,7 @@ class DroneModule(DroneModuleFrame):
         DroneModuleFrame.__init__(self, name, options)
 
     def Analyze(self):
-        import firmwareextract.py
+        #import firmwareextract
         fe_obj = firmwareextract.firmwareExtract(self.options['firmware_extract']['value'])
         fe_obj.run(self.options['output_folder']['value'])
 

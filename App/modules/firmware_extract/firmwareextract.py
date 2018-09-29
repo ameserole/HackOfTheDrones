@@ -52,12 +52,12 @@ class firmwareExtract():
             if afile == '':
                 continue
 
-            print(fe_obj.getMagic("tmp%d/%s" % (used_level, afile)))
+            print(self.getMagic("tmp%d/%s" % (used_level, afile)))
             print("!!!!")
             print (used_level)
             print(afile)
             print("tmp%d/%s" % (used_level, afile))
-            lvl, files = fe_obj.deflate("tmp%d/%s" % (used_level, afile))
+            lvl, files = self.deflate("tmp%d/%s" % (used_level, afile))
             if len(files) > 0:
                 self.deflate_list(files, lvl)
 
@@ -74,9 +74,9 @@ class firmwareExtract():
 
 
     def run(self, outfolder):
-        used_level, extracted_files = fe_obj.deflate(self.filename)
-        fe_obj.deflate_list(extracted_files, used_level)
-        fe_obj.save_extracted(outfolder)
+        used_level, extracted_files = self.deflate(self.filename)
+        self.deflate_list(extracted_files, used_level)
+        self.save_extracted(outfolder)
 
 
 
