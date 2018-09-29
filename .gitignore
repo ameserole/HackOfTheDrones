@@ -104,4 +104,4 @@ venv.bak/
 .mypy_cache/
 
 #find_credentials module
-Modules/firmware/
+App/modules/firmware/
