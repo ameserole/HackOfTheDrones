@@ -1,13 +1,11 @@
-import importlib.util
+import importlib
 import os
 
 class DroneInterface:
     def __init__(self, module_name):
-        mod = os.path.abspath("modules") + os.sep + module_name
-        if os.path.isdir(mod) and os.path.exists(mod + os.sep + "__init__.py"):
-            self.drone_module = __import__(module_name, fromlist=[''])
-        else:
-            raise Exception('Module {} not found'.format(module_name)
+        mod_name = 'App.modules.{}.{}'.format(module_name, module_name)
+        module = importlib.import_module(mod_name)
+        self.drone_module = module.DroneModule()
 
     def Analyze(self):
         self.drone_module.Analyze()
