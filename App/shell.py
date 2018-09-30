@@ -2,6 +2,7 @@ import sys, os
 from termcolor import colored
 sys.path.insert(0, '.')
 from interface import DroneInterface
+import subprocess
 
 # List Modules
 # List Drone Available Wifi
@@ -11,8 +12,9 @@ from interface import DroneInterface
 import os
 import re
 import readline
+from getch import getch
 
-COMMANDS = ['use', 'run', 'list', 'help']
+COMMANDS = ['use', 'run', 'list', 'help', 'quit']
 RE_SPACE = re.compile('.*\s+$', re.M)
 
 # https://stackoverflow.com/questions/5637124/tab-completion-in-pythons-raw-input
@@ -73,10 +75,6 @@ class Completer(object):
         results = [c + ' ' for c in COMMANDS if c.startswith(cmd)] + [None]
         return results[state]
 
-def list_drone_wifi():
-    print("Press any key to continue...")
-    sys.stdin.read(1)
-
 def check_modules():
     modules_dir = os.path.abspath(os.path.dirname(__file__))
     modules = os.listdir(modules_dir + "/modules")
@@ -96,10 +94,33 @@ def list_modules():
     print()
     print()
     print("Press any key to continue...")
-    sys.stdin.read(1)
+    getch()
 
-def print_list_usage():
-    return
+def list_wifi(wifi_intrfce):
+    """ Detect network card/list interfaces and disconnect if needed """
+    yn = subprocess.Popen(['sudo','nmcli','c'],stdout=subprocess.PIPE)
+    ynout = yn.stdout.read().decode('utf-8')
+    if wifi_intrfce in ynout:
+        subprocess.run(['sudo','nmcli','d','disconnect', wifi_intrfce])
+
+
+    # list all interfaces and choose which you want
+    subprocess.run(['sudo', 'nmcli', 'd', 'wifi', 'rescan'])
+    netlist = subprocess.Popen(['sudo', 'nmcli', 'd', 'wifi'], stdout=subprocess.PIPE)
+    output = netlist.stdout.read().decode('utf-8')
+    print(output)
+
+def wifi_connnect(ssid, password):
+    """ Connect to drone using creds you found"""
+    subprocess.run(['sudo','nmcli','d','wifi','connect',ssid,'password',password,'ifname',netiface])
+
+    print("Success.")
+
+def print_wifi_usage():
+    print("Available Commands:")
+    print("\t\tlist <interface> - List available wifi on <interface>")
+    print("\t\tconnect <ssid> <password> - Connects to <ssid> using <password>")
+    print("\t\thelp - Displays this menu help")
 
 def print_run_usage():
     print("Available Commands:")
@@ -117,7 +138,7 @@ def print_menu_usage():
     print("Available Commands:")
     print("\t\tlist - Display enumeration of arguement")
     print("\t\tuse - Loads module from modules directory")
-    print("\t\set - Access and Manipulate loaded module")
+    print("\t\tset - Access and Manipulate loaded module")
     print("\t\tshow - Displays fields of loaded module")
     print("\t\trun - Execute module behavior of argument")
     
@@ -128,7 +149,7 @@ def start_menu():
     drone_inf = ""
     valid_modules = check_modules()
     comp = Completer()
-    # we want to treat '/' as part of a word, so override the delimiters
+    # we want to treat '/' as part of a worlist_wifi delimiters
     readline.set_completer_delims(' \t\n;')
     readline.parse_and_bind("tab: complete")
     readline.set_completer(comp.complete)
@@ -138,12 +159,16 @@ def start_menu():
             cmd = input("hackdrones%s>>>"%(module_prompt if module_loaded else ""))
             arguments = cmd.split(" ")
             if arguments[0] == "list":
-                if arguments[1] == "modules":
-                    list_modules()
-                elif arguments[1] == "wifi":
-                    list_drone_wifi()
+                list_modules()
+            elif arguments[0] == "wifi":
+                if len(arguments) ==  2 and arguments[1] == "help":
+                    print_wifi_usage()
+                elif len(arguments) ==  3 and arguments[1] == "list":
+                    list_wifi(arguments[2])
+                elif len(arguments) ==  4 and arguments[1] == "connect":
+                    wifi_connnect(arguments[2], arguments[3])
                 else:
-                    print_list_usage()
+                    print_wifi_usage()
             elif arguments[0] == "use":
                 if arguments[1] in valid_modules:
                     loaded_module = arguments[1]
@@ -172,6 +197,15 @@ def start_menu():
                 break
             else:
                 print_menu_usage()
-        except:
-            print("Invalid Command.")
+        
+        except KeyboardInterrupt:
+            print("")
+            if module_loaded == True:
+                loaded_module = ""
+                module_loaded = False
+                drone_inf = ""
+                COMMANDS.remove("set")
+                COMMANDS.remove("show")
+        #except:
+        #    print("Invalid Command.")
     
