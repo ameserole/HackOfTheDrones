@@ -2,6 +2,7 @@ import sys, os
 from termcolor import colored
 sys.path.insert(0, '.')
 from interface import DroneInterface
+import subprocess
 
 # List Modules
 # List Drone Available Wifi
@@ -74,10 +75,6 @@ class Completer(object):
         results = [c + ' ' for c in COMMANDS if c.startswith(cmd)] + [None]
         return results[state]
 
-def list_drone_wifi():
-    print("Press any key to continue...")
-    sys.stdin.read(1)
-
 def check_modules():
     modules_dir = os.path.abspath(os.path.dirname(__file__))
     modules = os.listdir(modules_dir + "/modules")
@@ -141,7 +138,7 @@ def print_menu_usage():
     print("Available Commands:")
     print("\t\tlist - Display enumeration of arguement")
     print("\t\tuse - Loads module from modules directory")
-    print("\t\set - Access and Manipulate loaded module")
+    print("\t\tset - Access and Manipulate loaded module")
     print("\t\tshow - Displays fields of loaded module")
     print("\t\trun - Execute module behavior of argument")
     
@@ -209,6 +206,6 @@ def start_menu():
                 drone_inf = ""
                 COMMANDS.remove("set")
                 COMMANDS.remove("show")
-        except:
-            print("Invalid Command.")
+        #except:
+        #    print("Invalid Command.")
     
