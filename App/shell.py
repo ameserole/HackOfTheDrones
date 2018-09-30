@@ -110,7 +110,7 @@ def list_wifi(wifi_intrfce):
     output = netlist.stdout.read().decode('utf-8')
     print(output)
 
-def wifi_connnect(ssid, password):
+def wifi_connnect(ssid, password, netiface):
     """ Connect to drone using creds you found"""
     subprocess.run(['sudo','nmcli','d','wifi','connect',ssid,'password',password,'ifname',netiface])
 
@@ -165,8 +165,8 @@ def start_menu():
                     print_wifi_usage()
                 elif len(arguments) ==  3 and arguments[1] == "list":
                     list_wifi(arguments[2])
-                elif len(arguments) ==  4 and arguments[1] == "connect":
-                    wifi_connnect(arguments[2], arguments[3])
+                elif len(arguments) ==  5 and arguments[1] == "connect":
+                    wifi_connnect(arguments[2], arguments[3], arguments[4])
                 else:
                     print_wifi_usage()
             elif arguments[0] == "use":
